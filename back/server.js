@@ -22,7 +22,6 @@ app.use('/api/auth', authRoutes);
 
 // Conexión a la base de datos de MongoDB
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
 
 const connectDB = async () => {
     try {

@@ -8,9 +8,8 @@ const EventSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   time: { type: String, required: true },
   location: { type: String, required: true },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  category: { type: String, required: true },
+  createdBy: { type: String, required: true },
 });
 
-module.exports = mongoose.model('Event', UserSchema);
-
+module.exports = mongoose.model('Event', EventSchema);
