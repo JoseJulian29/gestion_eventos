@@ -10,8 +10,8 @@ import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <div className="App">
           <Navbar />
           <Routes>
@@ -27,9 +27,9 @@ function App() {
               }
             />
           </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+        </div>    
+      </AuthProvider>
+    </Router>
   );
 }
 

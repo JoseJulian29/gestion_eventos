@@ -1,15 +1,24 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {
+    if (user && (user.role === 'Taquilla' || user.role === 'Organizador')) {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <Link to="/" className="text-2xl font-bold">
+      <button onClick={handleHomeClick} className="text-2xl font-bold">
         Gestevent
-      </Link>
+      </button>
       <div>
         {user ? (
           <>
