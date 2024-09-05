@@ -1,4 +1,7 @@
 const Category = require('../models/Category');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 
 // Obtener todas las categorías
 const getCategories = async (req, res) => {
@@ -24,15 +27,16 @@ const getCategoryById = async (req, res) => {
 // Crear una nueva categoría
 const createCategory = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name } = req.body;
+    const image = req.file ? req.file.filename : null; // Obtener nombre del archivo cargado
 
-    if (!name || !description) {
-      return res.status(400).json({ message: 'All fields are required' });
+    if (!name) {
+      return res.status(400).json({ message: 'Name is required' });
     }
 
     const newCategory = new Category({
       name,
-      description
+      image
     });
 
     const savedCategory = await newCategory.save();
@@ -45,15 +49,16 @@ const createCategory = async (req, res) => {
 // Actualizar una categoría por ID
 const updateCategory = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name } = req.body;
+    const image = req.file ? req.file.filename : null;
 
-    if (!name || !description) {
-      return res.status(400).json({ message: 'All fields are required' });
+    if (!name) {
+      return res.status(400).json({ message: 'Name is required' });
     }
 
     const updatedCategory = await Category.findByIdAndUpdate(
       req.params.id,
-      { name, description },
+      { name, image },
       { new: true, runValidators: true }
     );
 
@@ -69,16 +74,39 @@ const deleteCategory = async (req, res) => {
   try {
     const deletedCategory = await Category.findByIdAndDelete(req.params.id);
     if (!deletedCategory) return res.status(404).json({ message: 'Category not found' });
+
+    // Eliminar imagen asociada si existe
+    if (deletedCategory.image) {
+      const imagePath = path.join(__dirname, '../uploads', deletedCategory.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
     res.json({ message: 'Category deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Cambia esto a la ruta donde deseas guardar los archivos
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+// Inicializa multer con la configuración de almacenamiento
+const upload = multer({ storage: storage });
+
+// Exporta `upload` para usarlo en las rutas
 module.exports = {
   getCategories,
   getCategoryById,
   createCategory,
   updateCategory,
   deleteCategory,
+  upload
 };
