@@ -7,6 +7,10 @@ import Register from './components/Register';
 import AdminHome from './components/admin/AdminHome';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import Users from './components/admin/Users';
+import Categories from './components/admin/Categories';
+import Events from './components/admin/Events';
+import AdminLayout from './components/admin/AdminLayout';
 
 function App() {
   return (
@@ -22,7 +26,39 @@ function App() {
               path="/admin"
               element={
                 <ProtectedRoute>
-                  <AdminHome />
+                  <AdminLayout>
+                    <AdminHome />
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Users />
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/events"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Events />
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Categories />
+                  </AdminLayout>
                 </ProtectedRoute>
               }
             />

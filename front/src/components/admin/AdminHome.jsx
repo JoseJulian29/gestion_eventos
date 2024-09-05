@@ -1,13 +1,16 @@
-// src/components/AdminHome.js
-
+// src/components/admin/AdminHome.jsx
 import React from 'react';
+import Sidebar from './SideBar'; // Asegúrate de importar el Sidebar
 
-function AdminHome() {
+const AdminHome = () => {
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <h2 className="text-2xl font-bold">Bienvenido al panel de administración</h2>
+    <div className="flex">
+      <div className="flex-1 p-6">
+        <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+        {/* Aquí puedes agregar el contenido principal del panel de administración */}
+      </div>
     </div>
   );
-}
+};
 
 export default AdminHome;
