@@ -90,6 +90,16 @@ const EventFormModal = ({ isOpen, onClose, onEventCreated, eventToEdit, isEditMo
           text: 'El evento ha sido creado exitosamente.',
         });
       }
+
+      setTitle('');
+      setDescription('');
+      setBanner('');
+      setLogo('');
+      setDate('');
+      setTime('');
+      setLocation('');
+      setCategory('');
+      
       onEventCreated();
       onClose();
     } catch (error) {
