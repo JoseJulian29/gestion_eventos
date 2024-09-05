@@ -30,6 +30,11 @@ const createEvent = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
+    const existingEvent = await Event.findOne({ title, category });
+    if (existingEvent) {
+      return res.status(400).json({ message: 'Ya existe un evento con el mismo nombre en esta categoría.' });
+    }
+
     const newEvent = new Event({
       title,
       date,

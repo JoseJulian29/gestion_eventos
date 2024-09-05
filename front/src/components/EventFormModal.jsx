@@ -103,13 +103,21 @@ const EventFormModal = ({ isOpen, onClose, onEventCreated, eventToEdit, isEditMo
       onEventCreated();
       onClose();
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un problema al guardar el evento. Inténtalo de nuevo.',
-      });
+      if (error.response && error.response.status === 400) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al guardar el evento. Inténtalo de nuevo.',
+        });
+      }
     }
-  };
+  };  
 
   if (!isOpen) return null;
 
