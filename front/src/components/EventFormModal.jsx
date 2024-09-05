@@ -38,6 +38,15 @@ const EventFormModal = ({ isOpen, onClose, onEventCreated, eventToEdit, isEditMo
       setTime(eventToEdit.time);
       setLocation(eventToEdit.location);
       setCategory(eventToEdit.category);
+    } else {
+      setTitle('');
+      setDescription('');
+      setBanner('');
+      setLogo('');
+      setDate('');
+      setTime('');
+      setLocation('');
+      setCategory('');
     }
   }, [isEditMode, eventToEdit]);
 
@@ -95,7 +104,7 @@ const EventFormModal = ({ isOpen, onClose, onEventCreated, eventToEdit, isEditMo
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded shadow-md w-96">
         <h2 className="text-xl font-bold mb-4">{isEditMode ? 'Editar Evento' : 'Crear Nuevo Evento'}</h2>
         <form onSubmit={handleSaveEvent}>

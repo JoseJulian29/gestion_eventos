@@ -4,7 +4,8 @@ import EventCard from './EventCard';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
 import { AuthContext } from '../context/AuthContext';
-import EventModal from './EventFormModal';
+import EventFormModal from './EventFormModal';
+import Swal from 'sweetalert2';
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -13,85 +14,146 @@ const EventList = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventToEdit, setEventToEdit] = useState(null);
+  const [categoryCounts, setCategoryCounts] = useState({});
   const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   const fetchEvents = async () => {
     try {
       const response = await axios.get('http://localhost:5001/api/events');
-      setEvents(response.data);
-      setFilteredEvents(response.data);
+      const eventsData = response.data;
+      setEvents(eventsData);
+      setFilteredEvents(eventsData);
+
+      const counts = eventsData.reduce((acc, event) => {
+        acc[event.category] = (acc[event.category] || 0) + 1;
+        return acc;
+      }, {});
+      setCategoryCounts(counts);
     } catch (error) {
       console.error('Error fetching events:', error);
     }
   };
 
   useEffect(() => {
-    fetchEvents();
-  }, []);
+    filterEvents();
+  }, [searchQuery, selectedCategory, events]);
 
-  useEffect(() => {
-    let results = events;
+  const filterEvents = () => {
+    let filtered = events;
 
     if (searchQuery) {
-      results = results.filter(event =>
+      filtered = filtered.filter((event) =>
         event.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     if (selectedCategory !== 'All') {
-      results = results.filter(event => event.category === selectedCategory);
+      filtered = filtered.filter(
+        (event) => event.category === selectedCategory
+      );
     }
 
-    setFilteredEvents(results);
-  }, [searchQuery, selectedCategory, events]);
+    setFilteredEvents(filtered);
+  };
+
+  const handleDeleteEvent = (eventId) => {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás recuperar este evento después de eliminarlo!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`http://localhost:5001/api/events/${eventId}`);
+          Swal.fire(
+            'Eliminado!',
+            'El evento ha sido eliminado.',
+            'success'
+          );
+          fetchEvents();
+        } catch (error) {
+          Swal.fire(
+            'Error!',
+            'Hubo un problema al eliminar el evento. Inténtalo de nuevo.',
+            'error'
+          );
+        }
+      }
+    });
+  };
+
+  const handleOpenModal = (event) => {
+    setEventToEdit(event);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setEventToEdit(null);
+    setIsModalOpen(false);
+  };
 
   const handleEventCreated = () => {
     fetchEvents();
   };
 
-  const handleEdit = (event) => {
-    setEventToEdit(event);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = async (eventId) => {
-    try {
-      await axios.delete(`http://localhost:5001/api/events/${eventId}`);
-      fetchEvents();
-    } catch (error) {
-      console.error('Error deleting event:', error);
+  const groupedEvents = filteredEvents.reduce((acc, event) => {
+    if (!acc[event.category]) {
+      acc[event.category] = [];
     }
-  };
+    acc[event.category].push(event);
+    return acc;
+  }, {});
 
   return (
     <div className="container mx-auto p-4">
       {user && user.role !== 'Participante' && (
         <div className="flex justify-end mb-4">
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => handleOpenModal(null)}
             className="bg-blue-500 text-white px-4 py-2 rounded shadow"
           >
             Crear Evento
           </button>
         </div>
       )}
-      <EventModal
+      <EventFormModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onEventCreated={handleEventCreated}
         eventToEdit={eventToEdit}
         isEditMode={!!eventToEdit}
       />
       <SearchBar setSearchQuery={setSearchQuery} />
-      <CategoryFilter setSelectedCategory={setSelectedCategory} />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredEvents.map(event => (
-          <EventCard
-            key={event._id}
-            event={event}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+      <CategoryFilter
+        categories={Object.keys(categoryCounts)}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
+      <div>
+        {Object.keys(groupedEvents).map((category) => (
+          <div key={category} className="mb-6">
+            <h2 className="text-xl font-bold mb-2">
+              {category} ({categoryCounts[category]})
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {groupedEvents[category].map((event) => (
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  onEdit={() => handleOpenModal(event)}
+                  onDelete={() => handleDeleteEvent(event._id)}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>

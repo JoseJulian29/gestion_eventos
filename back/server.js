@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const userRoutes = require('./routes/userRoutes');
 const eventRoutes = require('./routes/eventRoutes');
@@ -11,6 +13,8 @@ const authRoutes = require('./routes/authRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 // Middlewares
 app.use(express.json());
@@ -39,6 +43,27 @@ const connectDB = async () => {
 
 connectDB();
 
-app.listen(PORT, () => {
+io.on('connection', (socket) => {
+    console.log('New client connected');
+    
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
+const notifyClients = () => {
+    io.emit('eventUpdate');
+};
+
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
+            notifyClients();
+        }
+    });
+    next();
+});
+
+server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
