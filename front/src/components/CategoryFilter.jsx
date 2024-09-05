@@ -1,17 +1,16 @@
 // src/components/CategoryFilter.js
 
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const CategoryFilter = ({ setSelectedCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    // Fetch categories from the backend
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/categories');
-        const data = await response.json();
-        setCategories(data);
+        const response = await axios.get('http://localhost:5001/api/categories');
+        setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }

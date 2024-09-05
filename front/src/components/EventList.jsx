@@ -1,6 +1,7 @@
 // src/components/EventList.js
 
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import EventCard from './EventCard';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
@@ -15,10 +16,9 @@ const EventList = ({ userRole }) => {
     // Fetch events from the backend
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/events');
-        const data = await response.json();
-        setEvents(data);
-        setFilteredEvents(data);
+        const response = await axios.get('http://localhost:5001/api/events');
+        setEvents(response.data);
+        setFilteredEvents(response.data);
       } catch (error) {
         console.error('Error fetching events:', error);
       }
