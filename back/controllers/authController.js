@@ -72,7 +72,23 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Obtener información del usuario actual
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id); // `req.user` se establece en el middleware de autenticación
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.json({ id: user._id, username: user.username, email: user.email, role: user.role });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  getCurrentUser
 };

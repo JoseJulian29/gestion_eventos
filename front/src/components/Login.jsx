@@ -14,8 +14,14 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      navigate('/');
+      const user = await login(email, password);
+      console.log('Logged-in User:', user);
+
+      if (user && (user.role === 'Taquilla' || user.role === 'Organizador')) {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setError(err.message);
     }
