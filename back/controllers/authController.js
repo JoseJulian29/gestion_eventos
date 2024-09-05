@@ -5,28 +5,32 @@ const User = require('../models/User');
 // Registro de usuario
 const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !role) {
       return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
-    // Verificar si el usuario o el correo ya existen
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
       return res.status(400).json({ message: 'El correo ya está registrado' });
+    }
+
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: 'El nombre de usuario ya está registrado' });
     }
 
     // Hash de la contraseña
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Crear un nuevo usuario con el rol de 'Participante' por defecto
+    // Crear un nuevo usuario con el rol seleccionado
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
-      role: 'Participante'
+      role
     });
 
     const savedUser = await newUser.save();

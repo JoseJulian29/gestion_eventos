@@ -1,6 +1,8 @@
+// src/components/Login.js
+
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -58,6 +60,12 @@ function Login() {
             Iniciar Sesión
           </button>
         </form>
+        <p className="text-sm mt-4">
+          ¿No tienes cuenta aún?{' '}
+          <Link to="/register" className="text-blue-500 hover:underline">
+            Regístrate aquí
+          </Link>
+        </p>
       </div>
     </div>
   );

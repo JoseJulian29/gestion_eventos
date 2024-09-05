@@ -4,17 +4,18 @@ import Navbar from './components/Navbar';
 import EventList from './components/EventList';
 import Login from './components/Login';
 import { AuthProvider } from './context/AuthContext';
+import Register from './components/Register';
 
 function App() {
-  const userRole = 'Participante'; // Este código no es necesario si no lo usas
   return (
     <AuthProvider>
       <Router>
         <div className="App">
           <Navbar />
           <Routes>
-            <Route path="/login" element={<Login />} />
             <Route path="/" element={<EventList />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </div>
       </Router>
