@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import CategoryModal from './CategoryModal';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../context/AuthContext';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const { user } = useContext(AuthContext);
+  const currentUser = user;
 
   useEffect(() => {
     fetchCategories();
@@ -101,12 +104,14 @@ const Categories = () => {
                 >
                   <FaEdit />
                 </button>
-                <button
-                  onClick={() => handleDelete(category._id)}
-                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                >
-                  <FaTrash />
-                </button>
+                {currentUser.role === 'Taquilla' && (
+                  <button
+                    onClick={() => handleDelete(category._id)}
+                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    <FaTrash />
+                  </button>
+                )}
               </td>
             </tr>
           ))}

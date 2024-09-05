@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import UserModal from './UserModal';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../context/AuthContext';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const { user } = useContext(AuthContext);
+  const currentUser = user;
 
   useEffect(() => {
     fetchUsers();
@@ -98,13 +101,15 @@ const Users = () => {
                 >
                   <FaEdit />
                 </button>
-                <button
-                  onClick={() => handleDelete(user._id)}
-                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  title="Eliminar"
-                >
-                  <FaTrash />
-                </button>
+                {currentUser.role === 'Taquilla' && (
+                  <button
+                    onClick={() => handleDelete(user._id)}
+                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                    title="Eliminar"
+                  >
+                    <FaTrash />
+                  </button>
+                )}
               </td>
             </tr>
           ))}
