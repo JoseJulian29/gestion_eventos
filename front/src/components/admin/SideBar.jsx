@@ -1,4 +1,3 @@
-// src/components/admin/Sidebar.jsx
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -12,7 +11,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="w-64 h-screen bg-gray-800 text-white">
+    <div className="w-64 h-full-screen bg-gray-800 text-white">
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
         <nav>

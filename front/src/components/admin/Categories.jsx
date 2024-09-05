@@ -94,16 +94,16 @@ const Categories = () => {
                   'No hay imagen'
                 )}
               </td>
-              <td className="border border-gray-300 p-2">
+              <td className="border border-gray-300 p-2 text-center">
                 <button
                   onClick={() => handleEdit(category)}
-                  className="mr-2 text-blue-500"
+                  className="mr-2 px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                 >
                   <FaEdit />
                 </button>
                 <button
                   onClick={() => handleDelete(category._id)}
-                  className="text-red-500"
+                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                 >
                   <FaTrash />
                 </button>

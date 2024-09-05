@@ -24,18 +24,22 @@ const getEventById = async (req, res) => {
 // Crear un nuevo evento
 const createEvent = async (req, res) => {
   try {
-    const { name, date, location, description, organizer } = req.body;
+    const { title, date, location, description, category, createdBy, banner, logo, time } = req.body;
 
-    if (!name || !date || !location || !description || !organizer) {
+    if (!title || !date || !location || !description || !category || !createdBy || !time) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
     const newEvent = new Event({
-      name,
+      title,
       date,
       location,
       description,
-      organizer
+      category,
+      createdBy,
+      banner,
+      logo,
+      time
     });
 
     const savedEvent = await newEvent.save();
@@ -48,15 +52,15 @@ const createEvent = async (req, res) => {
 // Actualizar un evento por ID
 const updateEvent = async (req, res) => {
   try {
-    const { name, date, location, description, organizer } = req.body;
+    const { title, date, location, description, category, createdBy, banner, logo, time } = req.body;
 
-    if (!name || !date || !location || !description || !organizer) {
+    if (!title || !date || !location || !description || !category || !createdBy || !time) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
     const updatedEvent = await Event.findByIdAndUpdate(
       req.params.id,
-      { name, date, location, description, organizer },
+      { title, date, location, description, category, createdBy, banner, logo, time },
       { new: true, runValidators: true }
     );
 

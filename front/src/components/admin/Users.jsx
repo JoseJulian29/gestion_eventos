@@ -90,17 +90,17 @@ const Users = () => {
               <td className="border border-gray-300 p-2">{user.username}</td>
               <td className="border border-gray-300 p-2">{user.email}</td>
               <td className="border border-gray-300 p-2">{user.role}</td>
-              <td className="border border-gray-300 p-2">
+              <td className="border border-gray-300 p-2 text-center">
                 <button
                   onClick={() => handleEdit(user)}
-                  className="mr-2 px-2 py-1 bg-yellow-500 text-white rounded"
+                  className="mr-2 px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                   title="Editar"
                 >
                   <FaEdit />
                 </button>
                 <button
                   onClick={() => handleDelete(user._id)}
-                  className="px-2 py-1 bg-red-500 text-white rounded"
+                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                   title="Eliminar"
                 >
                   <FaTrash />

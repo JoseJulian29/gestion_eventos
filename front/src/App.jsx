@@ -9,7 +9,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Users from './components/admin/Users';
 import Categories from './components/admin/Categories';
-import Events from './components/admin/Events';
 import AdminLayout from './components/admin/AdminLayout';
 
 function App() {
@@ -47,7 +46,7 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminLayout>
-                    <Events />
+                    <EventList />
                   </AdminLayout>
                 </ProtectedRoute>
               }
