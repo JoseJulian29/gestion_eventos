@@ -140,3 +140,42 @@ http://localhost:5001/api-docs
 ```
 Aquí encontrarás la documentación completa de los endpoints disponibles en la API, junto con ejemplos de solicitudes y respuestas.
 
+### Screenshots del proyecto
+
+#### Lista de Eventos
+
+![event_list](./screenshots/home.png)
+
+#### Login
+
+![login](./screenshots/login.png)
+
+#### Registro
+
+![register](./screenshots/register.png)
+
+#### Admin home
+
+![admin_home](./screenshots/adminhome.png)
+
+#### Crud de usuarios
+
+![users_crud](./screenshots/users_crud.png)
+
+#### Modal para usuario
+
+![user_modal](./screenshots/user_modal.png)
+
+#### Crud de categorias
+
+![category_crud](./screenshots/category_crud.png)
+
+#### Modal de categoria
+
+![category_modal](./screenshots/category_modal.png)
+
+#### Modal de eventos
+
+Aqui me hizo falta validar correctamente la subida de imagen, por el momento solo se puede agregar una url para los campos banner y logo, si se agrega una url de la web valida, se mostrará correctamente la imagen
+
+![event_modal](./screenshots/event_modal.png)
