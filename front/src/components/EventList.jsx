@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
+  const [categories, setCategories] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +20,7 @@ const EventList = () => {
 
   useEffect(() => {
     fetchEvents();
+    fetchCategories();
   }, []);
 
   const fetchEvents = async () => {
@@ -38,6 +40,21 @@ const EventList = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:5001/api/categories');
+      const categoriesData = response.data;
+      const categoriesMap = categoriesData.reduce((acc, category) => {
+        acc[category.name] = category.image;
+        return acc;
+      }, {});
+      setCategories(categoriesMap);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  // Filter events based on search query and selected category
   useEffect(() => {
     filterEvents();
   }, [searchQuery, selectedCategory, events]);
@@ -73,18 +90,10 @@ const EventList = () => {
       if (result.isConfirmed) {
         try {
           await axios.delete(`http://localhost:5001/api/events/${eventId}`);
-          Swal.fire(
-            'Eliminado!',
-            'El evento ha sido eliminado.',
-            'success'
-          );
+          Swal.fire('Eliminado!', 'El evento ha sido eliminado.', 'success');
           fetchEvents();
         } catch (error) {
-          Swal.fire(
-            'Error!',
-            'Hubo un problema al eliminar el evento. Inténtalo de nuevo.',
-            'error'
-          );
+          Swal.fire('Error!', 'Hubo un problema al eliminar el evento. Inténtalo de nuevo.', 'error');
         }
       }
     });
@@ -106,9 +115,12 @@ const EventList = () => {
 
   const groupedEvents = filteredEvents.reduce((acc, event) => {
     if (!acc[event.category]) {
-      acc[event.category] = [];
+      acc[event.category] = {
+        events: [],
+        image: categories[event.category],
+      };
     }
-    acc[event.category].push(event);
+    acc[event.category].events.push(event);
     return acc;
   }, {});
 
@@ -140,11 +152,20 @@ const EventList = () => {
       <div>
         {Object.keys(groupedEvents).map((category) => (
           <div key={category} className="mb-6">
-            <h2 className="text-xl font-bold mb-2">
-              {category} ({categoryCounts[category]})
-            </h2>
+            <div className="flex items-center mb-2">
+              {groupedEvents[category].image && (
+                <img
+                  src={`http://localhost:5001/uploads/${groupedEvents[category].image}`}
+                  alt={category}
+                  className="w-16 h-16 object-cover mr-4 rounded-full"
+                />
+              )}
+              <h2 className="text-xl font-bold">
+                {category} ({categoryCounts[category]})
+              </h2>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {groupedEvents[category].map((event) => (
+              {groupedEvents[category].events.map((event) => (
                 <EventCard
                   key={event._id}
                   event={event}
