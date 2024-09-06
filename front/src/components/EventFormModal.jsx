@@ -33,8 +33,9 @@ const EventFormModal = ({ isOpen, onClose, onEventCreated, eventToEdit, isEditMo
       setTitle(eventToEdit.title);
       setDescription(eventToEdit.description);
       setBanner(eventToEdit.banner);
-      setLogo(eventToEdit.logo);
-      setDate(eventToEdit.date);
+      setLogo(eventToEdit.logo);    
+      const formattedDate = new Date(eventToEdit.date).toISOString().split('T')[0];
+      setDate(formattedDate);
       setTime(eventToEdit.time);
       setLocation(eventToEdit.location);
       setCategory(eventToEdit.category);
