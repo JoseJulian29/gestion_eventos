@@ -2,6 +2,7 @@ const Category = require('../models/Category');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const { getIo } = require('../socket');
 
 // Obtener todas las categorías
 const getCategories = async (req, res) => {
@@ -45,6 +46,10 @@ const createCategory = async (req, res) => {
     });
 
     const savedCategory = await newCategory.save();
+
+    const io = getIo();
+    io.emit('categoryUpdate');
+    
     res.status(201).json(savedCategory);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -68,6 +73,10 @@ const updateCategory = async (req, res) => {
     );
 
     if (!updatedCategory) return res.status(404).json({ message: 'Category not found' });
+    
+    const io = getIo();
+    io.emit('categoryUpdate');
+
     res.json(updatedCategory);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -87,6 +96,9 @@ const deleteCategory = async (req, res) => {
         fs.unlinkSync(imagePath);
       }
     }
+
+    const io = getIo();
+    io.emit('categoryUpdate');
 
     res.json({ message: 'Category deleted' });
   } catch (error) {

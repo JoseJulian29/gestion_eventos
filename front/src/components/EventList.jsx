@@ -24,11 +24,13 @@ const EventList = () => {
   useEffect(() => {
     fetchEvents();
     fetchCategories();
-    
+
     socket.on('eventUpdate', fetchEvents);
+    socket.on('categoryUpdate', fetchCategories);
 
     return () => {
       socket.off('eventUpdate', fetchEvents);
+      socket.off('categoryUpdate', fetchCategories);
     };
   }, []);
 
