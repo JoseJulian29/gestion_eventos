@@ -13,6 +13,7 @@ const eventRoutes = require('./routes/eventRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const authRoutes = require('./routes/authRoutes');
 const imageRoutes = require('./routes/imageRoutes');
+const registrationRoutes = require('./routes/registrationRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -31,6 +32,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/images', imageRoutes);
+app.use('/api/register', registrationRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Conexión a la base de datos de MongoDB
