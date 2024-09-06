@@ -179,3 +179,7 @@ Aquí encontrarás la documentación completa de los endpoints disponibles en la
 Aqui me hizo falta validar correctamente la subida de imagen, por el momento solo se puede agregar una url para los campos banner y logo, si se agrega una url de la web valida, se mostrará correctamente la imagen
 
 ![event_modal](./screenshots/event_modal.png)
+
+#### Documentacion de la api
+
+![api_docs](./screenshots/api_doc.png)
