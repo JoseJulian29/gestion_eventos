@@ -6,11 +6,12 @@ const cors = require('cors');
 const path = require('path');
 const http = require('http');
 const { initSocket } = require('./socket');
+const { swaggerUi, swaggerSpec } = require('./config/swagger');
 
 const userRoutes = require('./routes/userRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
-const authRoutes = require('./routes/authRoutes'); 
+const authRoutes = require('./routes/authRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 
 const app = express();
@@ -20,6 +21,9 @@ const io = initSocket(server); // Inicializa Socket.IO
 // Middlewares
 app.use(express.json());
 app.use(cors());
+
+// Swagger setup
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Rutas
 app.use('/api/users', userRoutes);

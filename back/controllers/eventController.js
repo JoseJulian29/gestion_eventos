@@ -105,3 +105,193 @@ module.exports = {
   updateEvent,
   deleteEvent,
 };
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Event:
+ *       type: object
+ *       required:
+ *         - title
+ *         - date
+ *         - location
+ *         - description
+ *         - category
+ *         - createdBy
+ *         - time
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Event ID
+ *         title:
+ *           type: string
+ *           description: Event title
+ *         date:
+ *           type: string
+ *           format: date
+ *           description: Event date
+ *         location:
+ *           type: string
+ *           description: Event location
+ *         description:
+ *           type: string
+ *           description: Event description
+ *         category:
+ *           type: string
+ *           description: Event category
+ *         createdBy:
+ *           type: string
+ *           description: ID of the event creator
+ *         banner:
+ *           type: string
+ *           description: Name of the event banner file
+ *         logo:
+ *           type: string
+ *           description: Name of the event logo file
+ *         time:
+ *           type: string
+ *           description: Event time
+ *       example:
+ *         id: 60d0fe4f5311236168a109ca
+ *         title: "Rock Concert"
+ *         date: "2024-10-01"
+ *         location: "Central Stadium"
+ *         description: "A great rock concert with local bands."
+ *         category: "Music"
+ *         createdBy: "60d0fe4f5311236168a109cb"
+ *         banner: "rock_concert.jpg"
+ *         logo: "rock_logo.jpg"
+ *         time: "19:00"
+ */
+
+/**
+ * @openapi
+ * /api/events:
+ *   get:
+ *     summary: Get all events
+ *     tags:
+ *       - Events
+ *     responses:
+ *       200:
+ *         description: List of events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Event'
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @openapi
+ * /api/events/{id}:
+ *   get:
+ *     summary: Get an event by ID
+ *     tags:
+ *       - Events
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Event ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Event found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @openapi
+ * /api/events:
+ *   post:
+ *     summary: Create a new event
+ *     tags:
+ *       - Events
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Event'
+ *     responses:
+ *       201:
+ *         description: Event created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @openapi
+ * /api/events/{id}:
+ *   put:
+ *     summary: Update an event by ID
+ *     tags:
+ *       - Events
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Event ID
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Event'
+ *     responses:
+ *       200:
+ *         description: Event updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @openapi
+ * /api/events/{id}:
+ *   delete:
+ *     summary: Delete an event by ID
+ *     tags:
+ *       - Events
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Event ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Event deleted
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal server error
+ */

@@ -1,6 +1,42 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - email
+ *         - password
+ *         - role
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The user ID
+ *         username:
+ *           type: string
+ *           description: The user's username
+ *         email:
+ *           type: string
+ *           description: The user's email
+ *         password:
+ *           type: string
+ *           description: The user's password (hashed)
+ *         role:
+ *           type: string
+ *           enum: [Taquilla, Organizador, Participante]
+ *           description: The user's role
+ *       example:
+ *         _id: 1
+ *         username: john_doe
+ *         email: john.doe@example.com
+ *         password: hashed_password
+ *         role: Organizador
+ */
+
 // Obtener todos los usuarios
 const getUsers = async (req, res) => {
   try {
