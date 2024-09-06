@@ -28,21 +28,26 @@ const getCategoryById = async (req, res) => {
 const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    const image = req.file ? req.file.filename : null; // Obtener nombre del archivo cargado
+    const image = req.file ? req.file.filename : null;
 
     if (!name) {
       return res.status(400).json({ message: 'Name is required' });
     }
 
+    const existingCategory = await Category.findOne({ name });
+    if (existingCategory) {
+      return res.status(400).json({ message: 'Category with the same name already exists' });
+    }
+
     const newCategory = new Category({
       name,
-      image
+      image,
     });
 
     const savedCategory = await newCategory.save();
     res.status(201).json(savedCategory);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

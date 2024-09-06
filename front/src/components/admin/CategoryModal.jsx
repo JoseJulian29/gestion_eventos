@@ -66,7 +66,7 @@ const CategoryModal = ({ category, onClose, onSave }) => {
     if (image && image instanceof File) {
       formData.append('image', image);
     }
-
+  
     try {
       if (isEditing) {
         const response = await axios.put(`http://localhost:5001/api/categories/${category._id}`, formData, {
@@ -88,9 +88,14 @@ const CategoryModal = ({ category, onClose, onSave }) => {
       onClose();
     } catch (error) {
       console.error('Error saving category:', error);
-      Swal.fire('Error', 'Hubo un problema al guardar la categoría.', 'error');
+      if (error.response && error.response.data.message === 'Category with the same name already exists') {
+        Swal.fire('Error', 'Ya existe una categoría con el mismo nombre.', 'error');
+      } else {
+        Swal.fire('Error', 'Hubo un problema al guardar la categoría.', 'error');
+      }
     }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
