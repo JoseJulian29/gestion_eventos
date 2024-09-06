@@ -27,10 +27,13 @@ const EventList = () => {
     try {
       const response = await axios.get('http://localhost:5001/api/events');
       const eventsData = response.data;
-      setEvents(eventsData);
-      setFilteredEvents(eventsData);
 
-      const counts = eventsData.reduce((acc, event) => {
+      const sortedEvents = eventsData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      setEvents(sortedEvents);
+      setFilteredEvents(sortedEvents);
+
+      const counts = sortedEvents.reduce((acc, event) => {
         acc[event.category] = (acc[event.category] || 0) + 1;
         return acc;
       }, {});
