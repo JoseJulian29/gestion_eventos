@@ -15,7 +15,6 @@ function Login() {
     e.preventDefault();
     try {
       const user = await login(email, password);
-      console.log('Logged-in User:', user);
 
       if (user && (user.role === 'Taquilla' || user.role === 'Organizador')) {
         navigate('/admin');

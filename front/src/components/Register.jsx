@@ -21,7 +21,6 @@ function Register() {
         password,
         role,
       });
-      console.log('Usuario registrado:', response.data);
       navigate('/login');
     } catch (err) {
       setError(err.response.data.message);
