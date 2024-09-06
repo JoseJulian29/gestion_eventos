@@ -1,10 +1,11 @@
+// server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const http = require('http');
-const socketIo = require('socket.io');
+const { initSocket } = require('./socket');
 
 const userRoutes = require('./routes/userRoutes');
 const eventRoutes = require('./routes/eventRoutes');
@@ -14,7 +15,7 @@ const imageRoutes = require('./routes/imageRoutes');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = initSocket(server); // Inicializa Socket.IO
 
 // Middlewares
 app.use(express.json());
@@ -42,14 +43,6 @@ const connectDB = async () => {
 };
 
 connectDB();
-
-io.on('connection', (socket) => {
-    console.log('New client connected');
-    
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
-});
 
 const notifyClients = () => {
     io.emit('eventUpdate');

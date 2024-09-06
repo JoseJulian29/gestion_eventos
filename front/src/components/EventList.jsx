@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
 import EventCard from './EventCard';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
 import { AuthContext } from '../context/AuthContext';
 import EventFormModal from './EventFormModal';
 import Swal from 'sweetalert2';
+
+const socket = io('http://localhost:5001');
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -21,6 +24,12 @@ const EventList = () => {
   useEffect(() => {
     fetchEvents();
     fetchCategories();
+    
+    socket.on('eventUpdate', fetchEvents);
+
+    return () => {
+      socket.off('eventUpdate', fetchEvents);
+    };
   }, []);
 
   const fetchEvents = async () => {
@@ -57,7 +66,6 @@ const EventList = () => {
     }
   };
 
-  // Filter events based on search query and selected category
   useEffect(() => {
     filterEvents();
   }, [searchQuery, selectedCategory, events]);

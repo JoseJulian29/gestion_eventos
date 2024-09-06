@@ -1,4 +1,6 @@
+// eventController.js
 const Event = require('../models/Event');
+const { getIo } = require('../socket');
 
 // Obtener todos los eventos
 const getEvents = async (req, res) => {
@@ -48,6 +50,9 @@ const createEvent = async (req, res) => {
     });
 
     const savedEvent = await newEvent.save();
+    
+    const io = getIo();
+    io.emit('eventUpdate');
     res.status(201).json(savedEvent);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -70,6 +75,9 @@ const updateEvent = async (req, res) => {
     );
 
     if (!updatedEvent) return res.status(404).json({ message: 'Event not found' });
+    
+    const io = getIo();
+    io.emit('eventUpdate');
     res.json(updatedEvent);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -81,6 +89,9 @@ const deleteEvent = async (req, res) => {
   try {
     const deletedEvent = await Event.findByIdAndDelete(req.params.id);
     if (!deletedEvent) return res.status(404).json({ message: 'Event not found' });
+    
+    const io = getIo();
+    io.emit('eventUpdate');
     res.json({ message: 'Event deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
