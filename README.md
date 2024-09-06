@@ -88,7 +88,7 @@ Validaciones:
 
 Lista de Eventos: 
 - Muestra eventos ordenados por fecha y categoría. 
-- Los participantes pueden ver los eventos.
+- Los participantes pueden ver los eventos y registrarse en ellos.
 - Los visitantes pueden ver solo información básica de los eventos.
 - Cada categoría puede tener una imagen de portada representativa.
 
@@ -183,3 +183,9 @@ Aqui me hizo falta validar correctamente la subida de imagen, por el momento sol
 #### Documentacion de la api
 
 ![api_docs](./screenshots/api_doc.png)
+
+#### Registro a evento
+
+Los usuarios de tipo participante pueden registrarse a eventos
+
+![event_register](./screenshots/event_register.png)
