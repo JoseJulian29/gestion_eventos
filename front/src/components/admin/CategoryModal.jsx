@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 const CategoryModal = ({ category, onClose, onSave }) => {
   const [name, setName] = useState('');
   const [image, setImage] = useState(null);
+  const [imageToDelete, setImageToDelete] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -12,46 +13,62 @@ const CategoryModal = ({ category, onClose, onSave }) => {
       setName(category.name);
       if (category.image) {
         setImage(`http://localhost:5001/uploads/${category.image}`);
+        setImageToDelete(category.image);
       } else {
         setImage(null);
+        setImageToDelete(null);
       }
       setIsEditing(true);
     } else {
       setName('');
       setImage(null);
+      setImageToDelete(null);
       setIsEditing(false);
     }
   }, [category]);
+
+  useEffect(() => {
+    return () => {
+      if (imageToDelete) {
+        handleDeleteImage(true);
+      }
+    };
+  }, [onClose]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setImage(file);
+      setImageToDelete(null);  
     } else {
       Swal.fire('Error', 'Por favor selecciona un archivo de imagen válido.', 'error');
     }
   };
 
-  const handleDeleteImage = async () => {
-    if (!isEditing || !category.image) return;
-  
-    const result = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'No podrás revertir esta acción.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
-    });
-  
+  const handleDeleteImage = async (isCancel = false) => {
+    if (!isEditing || !imageToDelete) return;
+
+    const result = isCancel
+      ? { isConfirmed: true }
+      : await Swal.fire({
+          title: '¿Estás seguro?',
+          text: 'No podrás revertir esta acción.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+        });
+
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5001/api/images?file=${category.image}`);
+        await axios.delete(`http://localhost:5001/api/images?file=${imageToDelete}`);
+        await axios.put(`http://localhost:5001/api/categories/${category._id}`, { name, image: null });
         
         setImage(null);
-  
+        setImageToDelete(null);
+
         Swal.fire('¡Eliminada!', 'La imagen ha sido eliminada.', 'success');
       } catch (error) {
         console.error('Error deleting image:', error);
@@ -66,7 +83,7 @@ const CategoryModal = ({ category, onClose, onSave }) => {
     if (image && image instanceof File) {
       formData.append('image', image);
     }
-  
+    
     try {
       if (isEditing) {
         const response = await axios.put(`http://localhost:5001/api/categories/${category._id}`, formData, {
@@ -95,7 +112,6 @@ const CategoryModal = ({ category, onClose, onSave }) => {
       }
     }
   };
-  
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
